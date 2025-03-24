@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.house.mapper.RentalMapper">
+
+
+    <!-- 查询所有数据-->
+    <select id="selectAll" resultType="com.house.entity.Rental">
+        select * from t_rental
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="houseId != null">
+                and house_id = #{houseId}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <!-- 添加数据-->
+    <insert id="insert">
+        insert into t_rental(
+            user_id, 
+            house_id, 
+            start_date, 
+            end_date, 
+            total_price, 
+            status, 
+            remark, 
+            created_at, 
+            updated_at
+        ) values (
+            #{userId}, 
+            #{houseId}, 
+            #{startDate}, 
+            #{endDate}, 
+            #{totalPrice}, 
+            #{status}, 
+            #{remark}, 
+            CURRENT_TIMESTAMP, 
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="updateById">
+        update t_rental
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="houseId != null">house_id = #{houseId},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="totalPrice != null">total_price = #{totalPrice},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--    根据用户id查询租赁记录-->
+    <select id="selectByUserId" resultType="com.house.entity.Rental">
+        SELECT *
+        FROM t_rental
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 查询房源的当前有效租约 -->
+    <select id="selectActiveByHouseId" resultType="com.house.entity.Rental">
+        SELECT *
+        FROM t_rental
+        WHERE house_id = #{houseId}
+        AND status IN ('pending', 'ongoing')
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 添加根据ID查询租约的方法 -->
+    <select id="selectById" resultType="com.house.entity.Rental">
+        SELECT *
+        FROM t_rental
+        WHERE id = #{id}
+    </select>
+
+
+
+
+
+
+</mapper>

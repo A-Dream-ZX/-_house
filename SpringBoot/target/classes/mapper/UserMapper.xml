@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.house.mapper.UserMapper">
+
+    <!-- 查询所有数据-->
+    <select id="selectAll" resultType="com.house.entity.User">
+        select * from t_user
+        <where>
+            <if test="username != null">username like concat('%', #{username} ,'%')</if>
+            <if test="name != null">and name like concat('%', #{name} ,'%')</if>
+        </where>
+        -- 排序
+        -- order by id desc
+    </select>
+
+    <!-- 添加数据-->
+    <insert id="insert">
+        insert into t_user(username, password, role, name, phone, email, avatar, created_at)
+        values (#{username}, #{password}, #{role}, #{name}, #{phone}, #{email}, #{avatar}, #{createdAt})
+    </insert>
+
+    <update id="updateById">
+        update t_user
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 获取用户注册趋势统计 -->
+    <select id="getUserStats" resultType="java.util.Map">
+        SELECT 
+            DATE(created_at) as dates,
+            COUNT(*) as counts
+        FROM t_user
+        WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+        GROUP BY DATE(created_at)
+        ORDER BY dates ASC
+    </select>
+</mapper>

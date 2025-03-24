@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.house.mapper.AdminMapper">
+
+    <!-- 查询所有数据-->
+    <select id="selectAll" resultType="com.house.entity.Admin">
+        select * from t_admin
+        <where>
+            <if test="username != null">username like concat('%', #{username} ,'%')</if>
+            <if test="name != null">and name like concat('%', #{name} ,'%')</if>
+        </where>
+        -- 排序
+        order by id desc
+    </select>
+
+    <!-- 添加数据-->
+    <insert id="insert">
+        insert into t_admin(username, password, role, name, phone, email, avatar)
+        values (#{username}, #{password}, #{role}, #{name}, #{phone}, #{email}, #{avatar})
+    </insert>
+
+    <update id="updateById">
+        update t_admin
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="avatar != null">avatar = #{avatar}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

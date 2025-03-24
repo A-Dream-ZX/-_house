@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+# 数据路配置
+spring:
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    # url: jdbc:mysql://localhost:3306/code2025?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/House?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+
+  servlet:
+    multipart:
+      # 文件上传配置
+      spring.servlet.multipart.max-file-size=10MB
+      spring.servlet.multipart.max-request-size=10MB
+
+
+
+
+# 配置mybatis实体和xml映射
+mybatis:
+  # 配置mapper.xml文件位置
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    # 配置mybatis日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+
+
