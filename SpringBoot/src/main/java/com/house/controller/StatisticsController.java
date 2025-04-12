@@ -13,19 +13,34 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 统计数据控制器
+ * 
+ * 处理与系统统计数据相关的HTTP请求，提供系统运营数据和关键指标
+ * 主要用于管理员仪表盘，展示系统概览和业务状况
+ */
 @RestController
 @RequestMapping("/statistics")
 public class StatisticsController {
 
     @Resource
-    private HouseService houseService;
+    private HouseService houseService; // 房源服务，用于获取房源统计数据
+    
     @Resource
-    private UserService userService;
+    private UserService userService; // 用户服务，用于获取用户统计数据
+    
     @Resource
-    private RentalService rentalService;
+    private RentalService rentalService; // 租约服务，用于获取租约统计数据
+    
     @Resource
-    private FavoriteService favoriteService;
+    private FavoriteService favoriteService; // 收藏服务，用于获取收藏统计数据
 
+    /**
+     * 获取系统概览统计数据
+     * 汇总系统关键指标，包括总量和增长数据
+     * 
+     * @return 包含多个统计指标的数据集合
+     */
     @GetMapping("/overview")
     public Result getOverview() {
         Map<String, Object> data = new HashMap<>();

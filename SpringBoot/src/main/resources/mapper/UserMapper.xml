@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- UserMapper映射文件，定义用户表(t_user)的SQL操作 -->
 <mapper namespace="com.house.mapper.UserMapper">
 
-    <!-- 查询所有数据-->
+    <!-- 
+        条件查询用户列表
+        支持按用户名和真实姓名进行模糊查询
+        不设置条件则查询所有用户
+    -->
     <select id="selectAll" resultType="com.house.entity.User">
         select * from t_user
         <where>
+            <!-- 按用户名模糊查询 -->
             <if test="username != null">username like concat('%', #{username} ,'%')</if>
+            <!-- 按真实姓名模糊查询 -->
             <if test="name != null">and name like concat('%', #{name} ,'%')</if>
         </where>
         -- 排序
         -- order by id desc
     </select>
 
-    <!-- 添加数据-->
+    <!-- 
+        添加新用户
+        插入用户的基本信息和注册时间
+    -->
     <insert id="insert">
         insert into t_user(username, password, role, name, phone, email, avatar, created_at)
         values (#{username}, #{password}, #{role}, #{name}, #{phone}, #{email}, #{avatar}, #{createdAt})
     </insert>
 
+    <!-- 
+        更新用户信息
+        动态SET语句，只更新非空字段
+    -->
     <update id="updateById">
         update t_user
         <set>
@@ -33,7 +47,10 @@
         where id = #{id}
     </update>
 
-    <!-- 获取用户注册趋势统计 -->
+    <!-- 
+        获取用户注册趋势统计
+        统计最近30天内每天新注册的用户数量
+    -->
     <select id="getUserStats" resultType="java.util.Map">
         SELECT 
             DATE(created_at) as dates,

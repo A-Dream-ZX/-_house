@@ -10,19 +10,26 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 租约服务类
+ * 
+ * 提供租约相关的业务逻辑实现，包括CRUD操作和特定业务功能
+ * 如租约的添加、修改、查询和状态更新等，并维护租约与房源状态的关联
+ */
 @Service
 public class RentalService {
 
     @Resource
-    RentalMapper rentalMapper;
+    RentalMapper rentalMapper; // 租约数据访问层接口
 
     @Resource
-    HouseService houseService;
+    HouseService houseService; // 房源服务，用于更新房源状态
 
     /**
-     * 添加信息
+     * 添加租约信息
+     * 创建新的租约记录，并根据租约状态更新关联房源的状态
      *
-     * @param rental
+     * @param rental 包含租约详细信息的实体对象
      */
     public void add(Rental rental) {
         rentalMapper.insert(rental);
@@ -34,27 +41,30 @@ public class RentalService {
     }
 
     /**
-     * 修改信息
+     * 修改租约信息
+     * 更新现有租约的基本信息
      *
-     * @param rental
+     * @param rental 包含更新后租约信息的实体对象
      */
     public void update(Rental rental) {
         rentalMapper.updateById(rental);
     }
 
     /**
-     * 删除信息
+     * 删除租约信息
+     * 根据ID删除指定租约
      *
-     * @param id
+     * @param id 要删除的租约ID
      */
     public void deleteByid(Integer id) {
         rentalMapper.deleteById(id);
     }
 
     /**
-     * 批量删除
+     * 批量删除租约
+     * 循环删除多个租约记录
      *
-     * @return
+     * @param rentalList 包含多个租约实体的列表
      */
     public void deleteBatch(List<Rental> rentalList) {
         for (Rental rental : rentalList) {  //iter 遍历
@@ -63,16 +73,24 @@ public class RentalService {
     }
 
 
-
+    /**
+     * 查询所有租约
+     * 获取系统中所有租约的列表
+     * 
+     * @return 所有租约的列表
+     */
     public List<Rental> selectAll() {
         return rentalMapper.selectAll(null);
     }
 
     /**
-     * 分页查询
+     * 分页查询租约
+     * 支持分页和条件查询，用于管理界面展示租约列表
      *
-     * @param pageNum
-     * @param pageSize
+     * @param pageNum 当前页码
+     * @param pageSize 每页显示条数
+     * @param rental 查询条件封装对象
+     * @return 返回包含分页信息和租约数据的PageInfo对象
      */
     public PageInfo<Rental> selectPage(Integer pageNum, Integer pageSize, Rental rental) {
         // 测试是否拿到当前用户信息
@@ -84,15 +102,23 @@ public class RentalService {
         return PageInfo.of(list);
     }
 
-
+    /**
+     * 根据用户ID查询租赁记录
+     * 获取指定用户的所有租约
+     * 
+     * @param userId 用户ID
+     * @return 该用户的所有租约列表
+     */
     public List<Rental> listByUserId(Integer userId) {
         return rentalMapper.selectByUserId(userId);
     }
 
     /**
      * 更新租约状态
-     * @param id
-     * @param status
+     * 修改租约的状态，并根据新状态更新相关房源的状态
+     * 
+     * @param id 租约ID
+     * @param status 新状态值，如"confirmed"、"ongoing"、"completed"等
      */
     public void updateStatus(Integer id, String status) {
         // 获取原始租约信息
@@ -124,8 +150,10 @@ public class RentalService {
     
     /**
      * 更新房源状态
-     * @param houseId
-     * @param status
+     * 调用房源服务更新指定房源的状态
+     * 
+     * @param houseId 房源ID
+     * @param status 新状态值，如"available"、"rented"等
      */
     private void updateHouseStatus(Integer houseId, String status) {
         houseService.updateStatus(houseId, status);
@@ -133,21 +161,41 @@ public class RentalService {
 
     /**
      * 根据房源ID查询当前有效的租约
-     * @param houseId
-     * @return
+     * 获取指定房源的所有未完成租约
+     * 
+     * @param houseId 房源ID
+     * @return 该房源的所有有效租约列表
      */
     public List<Rental> getActiveRentalsByHouseId(Integer houseId) {
         return rentalMapper.selectActiveByHouseId(houseId);
     }
 
+    /**
+     * 获取租约总数
+     * 用于统计和展示在仪表盘
+     * 
+     * @return 系统中的总租约数量
+     */
     public long getTotalRentals() {
         return rentalMapper.getTotalCount();
     }
 
+    /**
+     * 获取本月新增租约数
+     * 用于统计和展示在仪表盘
+     * 
+     * @return 本月新创建的租约数量
+     */
     public long getNewRentalsThisMonth() {
         return rentalMapper.getNewRentalsThisMonth();
     }
 
+    /**
+     * 获取本周新增租约数
+     * 用于统计和展示在仪表盘
+     * 
+     * @return 本周新创建的租约数量
+     */
     public long getNewRentalsThisWeek() {
         return rentalMapper.getNewRentalsThisWeek();
     }

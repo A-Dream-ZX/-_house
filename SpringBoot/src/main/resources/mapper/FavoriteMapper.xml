@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- FavoriteMapper映射文件，定义收藏表(t_favorite)的SQL操作 -->
 <mapper namespace="com.house.mapper.FavoriteMapper">
 
-    <!-- 查询所有数据-->
+    <!-- 
+        条件查询收藏列表
+        支持按用户ID和房源ID进行筛选
+        结果按ID降序排列，最新的收藏在前
+    -->
     <select id="selectAll" resultType="com.house.entity.Favorite">
         select * from t_favorite
         <where>
+            <!-- 按用户ID精确匹配 -->
             <if test="userId != null">
                 and user_id = #{userId}
             </if>
+            <!-- 按房源ID精确匹配 -->
             <if test="houseId != null">
                 and house_id = #{houseId}
             </if>
@@ -16,12 +23,21 @@
         order by id desc
     </select>
 
-    <!-- 添加数据-->
+    <!-- 
+        添加新收藏
+        插入用户ID、房源ID和创建时间
+        记录用户收藏房源的行为
+    -->
     <insert id="insert">
         insert into t_favorite(user_id, house_id, created_at)
         values (#{userId}, #{houseId}, #{createdAt})
     </insert>
 
+    <!-- 
+        更新收藏信息
+        动态SET语句，只更新非空字段
+        很少使用，因为收藏通常只有添加和删除操作
+    -->
     <update id="updateById">
         update t_favorite
         <set>
@@ -32,6 +48,11 @@
         where id = #{id}
     </update>
 
+    <!-- 
+        查询用户的收藏列表，包含房源详情
+        通过左连接查询收藏表和房源表
+        加载收藏对应的房源信息
+    -->
     <select id="selectByUserId" resultMap="favoriteWithHouseMap">
         SELECT f.*, h.*
         FROM t_favorite f
@@ -39,12 +60,18 @@
         WHERE f.user_id = #{userId}
     </select>
 
-    <!-- 添加结果映射 -->
+    <!-- 
+        收藏结果映射，含房源信息
+        定义收藏实体与房源实体的关联关系
+        通过association标签实现一对一关联映射
+    -->
     <resultMap id="favoriteWithHouseMap" type="com.house.entity.Favorite">
+        <!-- 收藏表字段映射 -->
         <id property="id" column="id"/>
         <result property="userId" column="user_id"/>
         <result property="houseId" column="house_id"/>
         <result property="createdAt" column="created_at"/>
+        <!-- 关联房源信息映射 -->
         <association property="house" javaType="com.house.entity.House">
             <id property="id" column="id"/>
             <result property="title" column="title"/>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- HouseMapper映射文件，用于定义房源表(t_house)的SQL操作 -->
 <mapper namespace="com.house.mapper.HouseMapper">
 
-    <!-- 查询所有数据-->
+    <!-- 房源结果映射，定义数据库字段与实体类属性的映射关系 -->
     <resultMap id="HouseResultMap" type="com.house.entity.House">
         <id property="id" column="id"/>
         <result property="title" column="title"/>
@@ -16,27 +17,37 @@
         <result property="createdAt" column="created_at"/>
         <result property="imageUrl" column="image_url"/>
         <result property="images" column="images"/>
-
     </resultMap>
 
+    <!-- 
+        条件查询房源
+        支持按标题、位置、房型、状态和价格区间进行多条件筛选
+        所有条件为AND关系，不设置条件则查询所有
+    -->
     <select id="selectAll" resultMap="HouseResultMap">
         select * from t_house
         <trim prefix="WHERE" prefixOverrides="AND |OR">
+            <!-- 按标题模糊查询，支持部分匹配 -->
             <if test="title != null and title != ''">
                 and title like concat('%', #{title}, '%')
             </if>
+            <!-- 按位置模糊查询，支持部分匹配 -->
             <if test="location != null and location != ''">
                 and location like concat('%', #{location}, '%')
             </if>
+            <!-- 按房型精确匹配 -->
             <if test="roomType != null and roomType != ''">
                 and room_type = #{roomType}
             </if>
+            <!-- 按状态精确匹配 -->
             <if test="status != null and status != ''">
                 and status = #{status}
             </if>
+            <!-- 价格下限筛选 -->
             <if test="minPrice != null">
                 and price >= #{minPrice}
             </if>
+            <!-- 价格上限筛选 -->
             <if test="maxPrice != null">
                 and price &lt;= #{maxPrice}
             </if>
@@ -44,12 +55,21 @@
 --         order by id desc
     </select>
 
-    <!-- 添加数据-->
+    <!-- 
+        添加新房源
+        插入房源的所有字段，除自增ID外
+        返回值为影响的行数
+    -->
     <insert id="insert">
         insert into t_house(title, description, location, price, area, room_type, status, admin_id, created_at, image_url, images)
         values (#{title}, #{description}, #{location}, #{price}, #{area}, #{roomType}, #{status}, #{adminId}, #{createdAt}, #{imageUrl}, #{images})
     </insert>
 
+    <!-- 
+        更新房源信息
+        动态SET语句，只更新非空字段
+        必须指定id作为更新条件
+    -->
     <update id="updateById">
         update t_house
         <set>
@@ -66,15 +86,23 @@
         where id = #{id}
     </update>
 
-    <!-- 根据价格区间查询 -->
+    <!-- 
+        根据价格区间查询房源
+        查询价格在指定范围内的所有房源
+        按ID降序排列
+    -->
     <select id="selectByPriceRange" resultType="com.house.entity.House">
         select * from t_house
         where price >= #{minPrice} and price &lt;= #{maxPrice}
         order by id desc
     </select>
 
+    <!-- 
+        根据ID查询房源详情
+        查询单个房源的完整信息
+        按ID降序排列（此处可能是多余的，因为ID是唯一的）
+    -->
     <select id="selectById" resultMap="HouseResultMap">
-
         select *
         from t_house
         where id = #{id}
@@ -82,9 +110,11 @@
         order by id desc
     </select>
 
-
-
-    <!-- 获取房源状态分布统计 -->
+    <!-- 
+        获取房源状态分布统计
+        按状态字段分组，统计每种状态的房源数量
+        返回status字段和对应的count统计值
+    -->
     <select id="getHouseStats" resultType="java.util.Map">
         SELECT
             status,
@@ -93,7 +123,12 @@
         GROUP BY status
     </select>
 
-    <!-- 获取房源价格区间分布统计 -->
+    <!-- 
+        获取房源价格区间分布统计
+        按自定义的价格区间分组，统计各区间的房源数量
+        区间分为：0-1000, 1001-2000, 2001-3000, 3001-4000, 4000+
+        返回ranges字段（价格区间）和对应的count统计值
+    -->
     <select id="getHousePriceStats" resultType="java.util.Map">
         SELECT
             CASE

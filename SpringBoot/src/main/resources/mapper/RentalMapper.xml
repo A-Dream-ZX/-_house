@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- RentalMapper映射文件，定义租约表(t_rental)的SQL操作 -->
 <mapper namespace="com.house.mapper.RentalMapper">
 
-
-    <!-- 查询所有数据-->
+    <!-- 
+        条件查询租约列表
+        支持按用户ID、房源ID和状态进行筛选
+        结果按ID降序排列，显示最新的租约在前
+    -->
     <select id="selectAll" resultType="com.house.entity.Rental">
         select * from t_rental
         <where>
+            <!-- 按用户ID精确匹配 -->
             <if test="userId != null">
                 and user_id = #{userId}
             </if>
+            <!-- 按房源ID精确匹配 -->
             <if test="houseId != null">
                 and house_id = #{houseId}
             </if>
+            <!-- 按状态精确匹配 -->
             <if test="status != null and status != ''">
                 and status = #{status}
             </if>
@@ -20,7 +27,11 @@
         order by id desc
     </select>
 
-    <!-- 添加数据-->
+    <!-- 
+        添加新租约
+        插入租约的所有字段，除自增ID外
+        创建时间和更新时间使用数据库当前时间戳
+    -->
     <insert id="insert">
         insert into t_rental(
             user_id, 
@@ -45,6 +56,11 @@
         )
     </insert>
 
+    <!-- 
+        更新租约信息
+        动态SET语句，只更新非空字段
+        必须指定id作为更新条件
+    -->
     <update id="updateById">
         update t_rental
         <set>
@@ -60,14 +76,21 @@
         where id = #{id}
     </update>
 
-    <!--    根据用户id查询租赁记录-->
+    <!-- 
+        根据用户ID查询租赁记录
+        获取指定用户的所有租约信息
+    -->
     <select id="selectByUserId" resultType="com.house.entity.Rental">
         SELECT *
         FROM t_rental
         WHERE user_id = #{userId}
     </select>
 
-    <!-- 查询房源的当前有效租约 -->
+    <!-- 
+        查询房源的当前有效租约
+        查询指定房源状态为待确认或进行中的租约
+        按创建时间降序排列，最新的租约在前
+    -->
     <select id="selectActiveByHouseId" resultType="com.house.entity.Rental">
         SELECT *
         FROM t_rental
@@ -76,16 +99,14 @@
         ORDER BY created_at DESC
     </select>
 
-    <!-- 添加根据ID查询租约的方法 -->
+    <!-- 
+        根据ID查询租约详情
+        获取单个租约的完整信息
+    -->
     <select id="selectById" resultType="com.house.entity.Rental">
         SELECT *
         FROM t_rental
         WHERE id = #{id}
     </select>
-
-
-
-
-
 
 </mapper>

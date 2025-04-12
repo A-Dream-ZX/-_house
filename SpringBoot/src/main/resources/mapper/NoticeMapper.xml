@@ -2,7 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.house.mapper.NoticeMapper">
 
-    <!-- 查询所有数据-->
+    <!-- 
+        查询所有公告信息
+        可根据标题、内容和时间进行模糊搜索
+        结果按ID降序排列（最新的公告排在前面）
+    -->
     <select id="selectAll" resultType="com.house.entity.Notice">
         select * from t_notice
         <where>
@@ -11,16 +15,23 @@
             <if test="time != null">and time like concat('%', #{time} ,'%')</if>
 
         </where>
-        -- 排序
+        -- 按ID降序排列，最新的公告排在前面
         order by id desc
     </select>
 
-    <!-- 添加数据-->
+    <!-- 
+        添加新公告
+        插入标题、内容和时间信息
+    -->
     <insert id="insert">
         insert into t_notice(title, content, time)
         values (#{title}, #{content}, #{time})
     </insert>
 
+    <!-- 
+        根据ID更新公告信息
+        可选择性地更新标题、内容和时间字段
+    -->
     <update id="updateById">
         update t_notice
         <set>
@@ -31,5 +42,15 @@
         </set>
         where id = #{id}
     </update>
+    
+    <!-- 
+        注意：deleteById方法未在此XML中实现
+        该方法在NoticeMapper.java接口中通过@Delete注解直接实现：
+        @Delete("delete from t_notice where id = #{id}")
+        void deleteById(Integer id);
+        
+        功能：根据ID删除公告记录
+        参数：id - 要删除的公告ID
+    -->
 
 </mapper>
