@@ -83,12 +83,6 @@
 
 ## 🚀 快速开始
 
-![image-20250602210709208](C:\Users\zx\AppData\Roaming\Typora\typora-user-images\image-20250602210709208.png)
-
-![image-20250602210751022](C:\Users\zx\AppData\Roaming\Typora\typora-user-images\image-20250602210751022.png)
-
-![image-20250602210830321](C:\Users\zx\AppData\Roaming\Typora\typora-user-images\image-20250602210830321.png)
-
 ### 环境要求
 
 - ⚡ JDK 17+
