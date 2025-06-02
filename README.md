@@ -7,10 +7,24 @@
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
-一个基于Spring Boot + Vue的现代化租房管理系统，提供房源管理、用户管理、租约管理等功能。
+一个基于Spring Boot + Vue的租房管理系统，提供房源管理、用户管理、租约管理等功能。
 
 [功能特性](#功能特性) • [技术栈](#技术栈) • [快速开始](#快速开始) • [项目结构](#项目结构)
 
+</div>
+
+## 📸 系统预览
+
+<div align="center">
+  <img src="docs/images/dashboard.png" alt="系统仪表盘" width="800"/>
+  <p>系统仪表盘 - 数据概览</p>
+
+
+  <img src="docs/images/house-list.png" alt="房源列表" width="800"/>
+  <p>房源管理 - 列表展示</p>
+
+  <img src="docs/images/house-detail.png" alt="房源详情" width="800"/>
+  <p>房源详情 - 信息展示</p>
 </div>
 
 ## ✨ 功能特性
@@ -69,7 +83,14 @@
 
 ## 🚀 快速开始
 
+![image-20250602210709208](C:\Users\zx\AppData\Roaming\Typora\typora-user-images\image-20250602210709208.png)
+
+![image-20250602210751022](C:\Users\zx\AppData\Roaming\Typora\typora-user-images\image-20250602210751022.png)
+
+![image-20250602210830321](C:\Users\zx\AppData\Roaming\Typora\typora-user-images\image-20250602210830321.png)
+
 ### 环境要求
+
 - ⚡ JDK 17+
 - 📦 Node.js 16+
 - 🐬 MySQL 8.0+
@@ -147,6 +168,21 @@ npm run build
 ## 📄 许可证
 
 本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
+
+## ⚠️ 免责声明
+
+本项目仅供学习和研究使用，不得用于商业用途。使用本项目所产生的任何后果由使用者自行承担。
+
+### 📚 论文参考
+
+本项目相关的论文参考文档位于 `docs/papers/` 目录下，仅供学术研究参考。如需引用，请注明出处。
+
+### 🔒 数据安全
+
+- 本项目使用的所有数据均为示例数据
+- 请勿在生产环境中使用默认账号和密码
+- 建议定期备份重要数据
+- 请遵守相关法律法规使用本系统
 
 ---
 
