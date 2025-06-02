@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * 租约管理控制器
- * 
+ * <p>
  * 处理与租约相关的HTTP请求，包括租约的创建、修改、查询和状态更新等操作
  * 提供租赁合同全生命周期的管理功能
  */
@@ -94,9 +94,9 @@ public class RentalController {
      * 分页查询租约
      * 支持分页和条件查询，用于管理界面展示租约列表
      *
-     * @param pageNum 当前页码，默认为1
+     * @param pageNum  当前页码，默认为1
      * @param pageSize 每页显示条数，默认为5
-     * @param rental 查询条件封装对象
+     * @param rental   查询条件封装对象
      * @return 返回包含分页信息和租约数据的PageInfo对象
      */
     @GetMapping("/selectPage")
@@ -125,7 +125,7 @@ public class RentalController {
      * 更新租约状态
      * 修改租约的状态，如确认、拒绝或完成租约
      *
-     * @param id 租约ID
+     * @param id     租约ID
      * @param status 新状态值，如"confirmed"、"rejected"等
      * @return 更新成功返回成功消息，失败抛出异常
      */
@@ -149,10 +149,10 @@ public class RentalController {
             rental.setCreatedAt(LocalDateTime.now());
             // 设置初始状态为待确认
             rental.setStatus("pending");
-            
+
             // 保存租约信息
             rentalService.add(rental);
-            
+
             return Result.success();
         } catch (Exception e) {
             return Result.error("500", "预订失败：" + e.getMessage());

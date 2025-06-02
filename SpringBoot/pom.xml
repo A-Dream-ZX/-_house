@@ -2,57 +2,55 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.4.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
+    <!-- 项目的基本信息 -->
     <groupId>com.house</groupId>
     <artifactId>SpringBoot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>SpringBoot</name>
     <description>SpringBoot</description>
 
-
+    <!-- 项目属性配置 -->
     <properties>
-        <java.version>17</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>17</java.version> <!-- 指定Java版本为17 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- 源码编码格式 -->
     </properties>
 
+    <!-- 项目依赖管理 -->
     <dependencies>
+        <!-- Spring Boot Web starter，提供Web开发支持 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!--数据库 -->
+        <!-- 数据库相关依赖 -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <scope>runtime</scope>
+            <scope>runtime</scope> <!-- 运行时依赖，仅打包到运行环境 -->
         </dependency>
 
-        <!--mybatis -->
+        <!-- MyBatis集成 -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>3.0.3</version>
         </dependency>
 
-<!--        分页插件pagehelper -->
-<!--                &lt;!&ndash;分页插件pagehelper &ndash;&gt;-->
-<!--                <dependency>-->
-<!--                    <groupId>com.github.pagehelper</groupId>-->
-<!--                    <artifactId>pagehelper-spring-boot-starter</artifactId>-->
-<!--                    <version>1.4.1</version>-->
-<!--                </dependency>-->
-
+        <!-- 分页插件PageHelper -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>1.4.6</version>
-            <!-- Spring Boot 3.4.3，这个版本与 PageHelper 1. 4.1 不兼容 要使用 1.4.6-->
+            <!-- 与Spring Boot 3.4.3兼容的版本，排除MyBatis依赖避免冲突 -->
             <exclusions>
                 <exclusion>
                     <groupId>org.mybatis</groupId>
@@ -61,32 +59,33 @@
             </exclusions>
         </dependency>
 
-        <!--  java工具类  -->
+        <!-- Hutool工具类库 -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>5.8.25</version>
         </dependency>
 
-        <!-- Excel -->
+        <!-- Excel处理 -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>5.3.0</version>
         </dependency>
 
-        <!-- JWT-->
+        <!-- JWT处理 -->
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
             <version>4.4.0</version>
         </dependency>
 
-        <!-- pom.xml修改 -->
+        <!-- MyBatis-Plus增强工具 -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.5.5</version>
+            <!-- 排除MyBatis依赖以避免版本冲突 -->
             <exclusions>
                 <exclusion>
                     <groupId>org.mybatis</groupId>
@@ -95,27 +94,29 @@
             </exclusions>
         </dependency>
 
+        <!-- JPA API -->
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
             <version>2.2</version>
         </dependency>
+
+        <!-- Hibernate核心 -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>5.6.0.Final</version>
         </dependency>
 
-
+        <!-- Lombok代码简化 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.28</version> <!-- 请根据需要选择最新版本 -->
-            <scope>provided</scope>
+            <version>1.18.28</version>
+            <scope>provided</scope> <!-- 提供范围，编译时需要但运行时不需要 -->
         </dependency>
 
-
-        <!--测试 -->
+        <!-- 测试依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -123,13 +124,14 @@
         </dependency>
     </dependencies>
 
+    <!-- 构建配置 -->
     <build>
         <plugins>
+            <!-- Spring Boot Maven插件，用于打包可执行的JAR/WAR -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
-
 </project>

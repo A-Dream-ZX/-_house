@@ -8,11 +8,11 @@
       </template>
 
       <div v-loading="loading">
-        <el-empty v-if="rentals.length === 0" description="暂无租赁记录" />
+        <el-empty v-if="rentals.length === 0" description="暂无租赁记录"/>
         <el-table v-else :data="rentals" style="width: 100%">
-          <el-table-column prop="house.title" label="房源标题" />
-          <el-table-column prop="startDate" label="开始日期" />
-          <el-table-column prop="endDate" label="结束日期" />
+          <el-table-column prop="house.title" label="房源标题"/>
+          <el-table-column prop="startDate" label="开始日期"/>
+          <el-table-column prop="endDate" label="结束日期"/>
           <el-table-column prop="monthlyRent" label="月租金">
             <template #default="scope">
               ￥{{ scope.row.monthlyRent }}
@@ -60,77 +60,77 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import {ref, onMounted} from 'vue';
+import {useRouter} from 'vue-router';
 import request from '@/utils/request.js';
-import { ElMessage } from 'element-plus';
+import {ElMessage} from 'element-plus';
 
 
-    const router = useRouter();
-    const rentals = ref([]);
-    const loading = ref(false);
-    const user = JSON.parse(localStorage.getItem('normal_user') || '{}');
+const router = useRouter();
+const rentals = ref([]);
+const loading = ref(false);
+const user = JSON.parse(localStorage.getItem('normal_user') || '{}');
 
-    const loadRentals = async () => {
-      loading.value = true;
-      try {
-        const res = await request.get('/rental/list', {
-          params: { userId: user.id }
-        });
-        if (res.code === '200') {
-          rentals.value = res.data;
-        } else {
-          ElMessage.error(res.msg || '加载租赁记录失败');
-        }
-      } catch (error) {
-        console.error('Error loading rentals:', error);
-        ElMessage.error('加载租赁记录失败');
-      } finally {
-        loading.value = false;
-      }
-    };
-
-    const handleRenewal = async (id) => {
-      try {
-        const res = await request.put(`/rental/renewal/${id}`);
-        if (res.code === '200') {
-          ElMessage.success('续租申请提交成功');
-          loadRentals();
-        } else {
-          ElMessage.error(res.msg || '续租申请失败');
-        }
-      } catch (error) {
-        console.error('Error submitting renewal:', error);
-        ElMessage.error('续租申请失败');
-      }
+const loadRentals = async () => {
+  loading.value = true;
+  try {
+    const res = await request.get('/rental/list', {
+      params: {userId: user.id}
+    });
+    if (res.code === '200') {
+      rentals.value = res.data;
+    } else {
+      ElMessage.error(res.msg || '加载租赁记录失败');
     }
+  } catch (error) {
+    console.error('Error loading rentals:', error);
+    ElMessage.error('加载租赁记录失败');
+  } finally {
+    loading.value = false;
+  }
+};
 
-    const handleTerminate = async (id) => {
-      try {
-        const res = await request.put(`/rental/terminate/${id}`);
-        if (res.code === '200') {
-          ElMessage.success('退租申请提交成功');
-          loadRentals();
-        } else {
-          ElMessage.error(res.msg || '退租申请失败');
-        }
-      } catch (error) {
-        console.error('Error submitting termination:', error);
-        ElMessage.error('退租申请失败');
-      }
-    }
-
-    const viewHouseDetail = (id) => {
-      router.push(`/house-detail/${id}`);
-    }
-
-    onMounted(() => {
-      if (!user.id) {
-        router.push('/login');
-        return;
-      }
+const handleRenewal = async (id) => {
+  try {
+    const res = await request.put(`/rental/renewal/${id}`);
+    if (res.code === '200') {
+      ElMessage.success('续租申请提交成功');
       loadRentals();
-    })
+    } else {
+      ElMessage.error(res.msg || '续租申请失败');
+    }
+  } catch (error) {
+    console.error('Error submitting renewal:', error);
+    ElMessage.error('续租申请失败');
+  }
+}
+
+const handleTerminate = async (id) => {
+  try {
+    const res = await request.put(`/rental/terminate/${id}`);
+    if (res.code === '200') {
+      ElMessage.success('退租申请提交成功');
+      loadRentals();
+    } else {
+      ElMessage.error(res.msg || '退租申请失败');
+    }
+  } catch (error) {
+    console.error('Error submitting termination:', error);
+    ElMessage.error('退租申请失败');
+  }
+}
+
+const viewHouseDetail = (id) => {
+  router.push(`/house-detail/${id}`);
+}
+
+onMounted(() => {
+  if (!user.id) {
+    router.push('/login');
+    return;
+  }
+  loadRentals();
+})
 
 
 </script>
